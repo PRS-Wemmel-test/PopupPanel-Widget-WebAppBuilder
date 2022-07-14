@@ -160,6 +160,11 @@
     /*width:100%;*/
 }
 
+.popupForm {
+    margin: 8px;
+    /*width:100%;*/
+}
+
 .formListTitle {
     font-weight: bold;
 }

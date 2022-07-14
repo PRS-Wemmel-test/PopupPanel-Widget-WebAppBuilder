@@ -206,7 +206,7 @@ define([
                             this._initPopupMenu();
                         }
 
-                        this.displayPopupContent(this.popup.getSelectedFeature());
+                        this.displayPopup(this.popup.getSelectedFeature());
                     })
                 )
             );
@@ -223,7 +223,6 @@ define([
                         }
                         if (this.popupContent) {
                             this.popupContent.innerHTML = "";
-                            //this.popupContent.set("content", "");
                         }
                         domUtils.hide(this.pager);
                     })
@@ -248,7 +247,7 @@ define([
                             domUtils.hide(this.instructions);
                             domUtils.show(this.actionsPaneDiv);
                         }
-                        //this.displayPopupContent(this.popup.getSelectedFeature());
+                        //this.displayPopup(this.popup.getSelectedFeature());
                         this.featureCount.innerHTML = "(1 de " + this.popup.features.length + ")";
 
                         //enable navigation if more than one feature is selected
@@ -299,35 +298,6 @@ define([
             this.own((this.zoomToEvt = on(this.zt, "click", lang.hitch(this, this.zoomToClicked))));
             this.own((this.clearSelEvt = on(this.clearSel, "click", lang.hitch(this, this.clearSelResults))));
             this.own((this.resizeEvt = on(window, "resize", lang.hitch(this, this.onWindowResize))));
-
-            /* this.own(
-                on(
-                    this.surveyTabButton,
-                    "click",
-                    lang.hitch(this, function () {
-                        this.displaySurveyContent();
-                    })
-                )
-            );
-            this.own(
-                on(
-                    this.formTabButton,
-                    "click",
-                    lang.hitch(this, function () {
-                        this.displayFormContent();
-                    })
-                )
-            ); */
-
-            /*  this.own(
-                on(
-                    this.backToList,
-                    "click",
-                    lang.hitch(this, function () {
-                        this.showListForm();
-                    })
-                )
-            ); */
         },
 
         doEditAction: function () {
@@ -359,7 +329,6 @@ define([
             }
             if (this.popupContent) {
                 this.popupContent.innerHTML = "";
-                //this.popupContent.set("content", "");
             }
 
             var table = document.getElementById("formTableId");
@@ -375,7 +344,7 @@ define([
         startup: function () {
             this.inherited(arguments);
             this.inPanel = this.getPanel();
-            this.displayPopupContent(this.popup.getSelectedFeature());
+            this.displayPopup(this.popup.getSelectedFeature());
             if (this.config.closeAtStart) {
                 if (!this.popup.getSelectedFeature()) {
                     setTimeout(
@@ -427,7 +396,7 @@ define([
             this.clearResults();
         },
 
-        displayPopupContent: function (feature) {
+        displayPopup: function (feature) {
             if (feature) {
                 if (this.inPanel) {
                     if (this.appConfig.theme.name === "JewelryBoxTheme") {
@@ -442,99 +411,280 @@ define([
                     WidgetManager.getInstance().triggerWidgetOpen(this.id);
                 }
 
-                this.tabHeader.innerHTML = "";
-                this.firstTabVisible = false;
-                domUtils.hide(this.tabHeader);
-
-                var infoTemplate = feature.getInfoTemplate();
-
-                if (this.popupContent) {
-                    //this.popupContent.set("content", content);
-
-                    const tabContent = document.createElement("div");
-                    //tabContent.setAttribute("class", "contentForm");
-
-                    this.popupContent.appendChild(tabContent);
-
-                    const title = feature.getTitle();
-
-                    const tabContentTitle = document.createElement("p");
-                    tabContentTitle.setAttribute("class", "formTitleClass");
-                    tabContentTitle.innerHTML = title;
-
-                    tabContent.appendChild(tabContentTitle);
-
-                    const line = document.createElement("div");
-                    line.setAttribute("class", "formLineClass");
-
-                    tabContent.appendChild(line);
-
-                    const tabContentTable = document.createElement("table");
-                    tabContentTable.setAttribute("class", "tabContentTable");
-                    tabContent.appendChild(tabContentTable);
-
-                    for (var i = 0; i < infoTemplate.info.fieldInfos.length; i++) {
-                        if (infoTemplate.info.fieldInfos[i].visible) {
-                            var field = infoTemplate.info.fieldInfos[i];
-
-                            var attributeName = field.label;
-                            var attributeValue = feature.attributes[field.fieldName];
-
-                            if (field.type == "esriFieldTypeDate") attributeValue = this.dateToString(attributeValue);
-
-                            var tr = document.createElement("tr");
-
-                            var td = document.createElement("td");
-                            td.className = "attrName";
-                            td.innerHTML = attributeName;
-
-                            var td2 = document.createElement("td");
-
-                            if (this.isValidHttpUrl(attributeValue)) {
-                                var link = document.createElement("a");
-                                link.setAttribute("href", attributeValue);
-                                link.setAttribute("target", "_blank");
-                                link.innerHTML = attributeValue;
-                                td2.appendChild(link);
-                            } else td2.innerHTML = attributeValue;
-
-                            tr.appendChild(td);
-                            tr.appendChild(td2);
-                            tabContentTable.appendChild(tr);
-                        }
-                    }
-
-                    const line2 = document.createElement("div");
-                    line2.setAttribute("class", "formLineClass");
-                    this.popupContent.appendChild(line2);
-
-                    this.displayTabActionDiv = document.createElement("div");
-                    this.displayTabActionDiv.setAttribute("class", "actionsPane actionList");
-                    this.displayTabActionDiv.setAttribute("style", "padding-bottom: 8px");
-                    this.displayTabActionDiv.onclick = () => {
-                        //this.displayEditTabContent(title, feature, feature.getLayer());
-                        console.log("Display tab content")
-                    };
-
-                    this.popupContent.appendChild(this.displayTabActionDiv);
-
-                    this.editTable = domConstruct.toDom(
-                        '<a title="Edit table" to="" class="action editTable" href="javascript:void(0);"><span>Editer la table</span></a>'
-                    );
-                    domConstruct.place(this.editTable, this.displayTabActionDiv);
-                }
-
-                this.displayOnPopup(this.popupContent);
-                this.searchForRelationships(feature, feature.getLayer());
-                domUtils.show(this.actionsPaneDiv);
-
-                //this.displayTabContent(title, feature, layer, tab);
+                this.displayPopupContent(feature);
             } else {
                 domUtils.hide(this.pager);
                 domUtils.show(this.instructions);
                 domUtils.hide(this.actionsPaneDiv);
                 domUtils.hide(this.tabHeader);
             }
+        },
+
+        displayPopupContent: function (feature) {
+            this.tabHeader.innerHTML = "";
+
+            const layer = feature.getLayer();
+
+            var infoTemplate = feature.getInfoTemplate();
+
+            var popupTab = document.createElement("p");
+            popupTab.innerHTML = layer.name;
+            popupTab.className = "selected";
+
+            this.selectedTab = popupTab;
+            this.tabHeader.appendChild(popupTab);
+
+            this.own(
+                on(
+                    popupTab,
+                    "click",
+                    lang.hitch(this, function () {
+                        this.displayPopupContentTab(popupTab);
+                        //this.displayPopup(feature);
+                    })
+                )
+            );
+
+            if (this.popupContent) {
+                this.popupContent.innerHTML = "";
+
+                const tabContent = document.createElement("div");
+                tabContent.setAttribute("class", "popupForm");
+
+                this.popupContent.appendChild(tabContent);
+
+                const title = feature.getTitle();
+
+                const tabContentTitle = document.createElement("p");
+                tabContentTitle.setAttribute("class", "formTitleClass");
+                tabContentTitle.innerHTML = title;
+
+                tabContent.appendChild(tabContentTitle);
+
+                const line = document.createElement("div");
+                line.setAttribute("class", "formLineClass");
+
+                tabContent.appendChild(line);
+
+                const tabContentTable = document.createElement("table");
+                tabContentTable.setAttribute("class", "tabContentTable");
+                tabContent.appendChild(tabContentTable);
+
+                for (var i = 0; i < infoTemplate.info.fieldInfos.length; i++) {
+                    if (infoTemplate.info.fieldInfos[i].visible) {
+                        var field = infoTemplate.info.fieldInfos[i];
+
+                        var attributeName = field.label;
+                        var attributeValue = feature.attributes[field.fieldName];
+
+                        var foundField = layer.fields.find((originalField) => {
+                            return originalField.name === field.fieldName;
+                        });
+
+                        if (foundField.type == "esriFieldTypeDate" && attributeValue) {
+                            attributeValue = this.dateToString(attributeValue);
+                        }
+
+                        var tr = document.createElement("tr");
+
+                        var td = document.createElement("td");
+                        td.className = "attrName";
+                        td.innerHTML = attributeName;
+
+                        var td2 = document.createElement("td");
+
+                        if (this.isValidHttpUrl(attributeValue)) {
+                            var link = document.createElement("a");
+                            link.setAttribute("href", attributeValue);
+                            link.setAttribute("target", "_blank");
+                            link.innerHTML = attributeValue;
+                            td2.appendChild(link);
+                        } else td2.innerHTML = attributeValue;
+
+                        tr.appendChild(td);
+                        tr.appendChild(td2);
+                        tabContentTable.appendChild(tr);
+                    }
+                }
+
+                const line2 = document.createElement("div");
+                line2.setAttribute("class", "formLineClass");
+                this.popupContent.appendChild(line2);
+
+                this.displayTabActionDiv = document.createElement("div");
+                this.displayTabActionDiv.setAttribute("class", "actionsPane actionList");
+                this.displayTabActionDiv.setAttribute("style", "padding-bottom: 8px");
+                this.displayTabActionDiv.onclick = () => {
+                    this.displayEditPopupContent(title, feature, layer, popupTab);
+                };
+
+                this.popupContent.appendChild(this.displayTabActionDiv);
+
+                this.editTable = domConstruct.toDom(
+                    '<a title="Edit table" to="" class="action editTable" href="javascript:void(0);"><span>Editer la table</span></a>'
+                );
+                domConstruct.place(this.editTable, this.displayTabActionDiv);
+            }
+
+            this.displayOnPopup(this.popupContent);
+            this.searchForRelationships(feature, feature.getLayer());
+            domUtils.show(this.actionsPaneDiv);
+
+            //this.displayTabContent(title, feature, layer, tab);
+        },
+
+        displayEditPopupContent: function (title, feature, layer, popupTab) {
+            const orignalFeatureAttributes = JSON.parse(JSON.stringify(feature.attributes));
+            //this.displayEditTabContent(title, feature, layer, popupTab);
+            console.log("Display edit popup content");
+
+            var infoTemplate = feature.getInfoTemplate();
+
+            this.popupContent.innerHTML = "";
+
+            const tabContent = document.createElement("div");
+            tabContent.setAttribute("class", "popupForm");
+
+            this.popupContent.appendChild(tabContent);
+
+            const tabContentTitle = document.createElement("p");
+            tabContentTitle.setAttribute("class", "formTitleClass");
+            tabContentTitle.innerHTML = title;
+
+            tabContent.appendChild(tabContentTitle);
+
+            const line = document.createElement("div");
+            line.setAttribute("class", "formLineClass");
+
+            tabContent.appendChild(line);
+
+            const tabContentTable = document.createElement("table");
+            tabContentTable.setAttribute("class", "tabContentTable");
+            tabContent.appendChild(tabContentTable);
+
+            for (var i = 0; i < infoTemplate.info.fieldInfos.length; i++) {
+                if (infoTemplate.info.fieldInfos[i].visible) {
+                    var field = infoTemplate.info.fieldInfos[i];
+
+                    var attributeName = field.label;
+                    var attributeValue = feature.attributes[field.fieldName];
+
+                    var tr = document.createElement("tr");
+
+                    var td = document.createElement("td");
+                    td.className = "attrName";
+                    td.innerHTML = attributeName;
+
+                    var td2 = document.createElement("td");
+
+                    var foundField = layer.fields.find((originalField) => {
+                        return originalField.name === field.fieldName;
+                    });
+
+                    if (foundField.type == "esriFieldTypeDate") {
+                        var dataTextBoxContainer = document.createElement("div");
+                        td2.appendChild(dataTextBoxContainer);
+
+                        const dateTextBox = new DateTextBox(
+                            {
+                                required: foundField && !foundField.nullable ? true : false,
+                                value: new Date(parseInt(attributeValue)),
+                                featureAttribute: field.fieldName,
+                                disabled: foundField && !foundField.editable ? true : false,
+                                style: "width: 100%;",
+                            },
+                            dataTextBoxContainer
+                        );
+
+                        dateTextBox.on("change", (event) => {
+                            feature.attributes[dateTextBox.featureAttribute] = event.getTime();
+                            //feature.attributes[event.target.featureAttribute] = event.target.value;
+                        });
+                    } else if (foundField.domain) {
+                        var memoryStore = new Memory({
+                            data: foundField.domain.codedValues,
+                        });
+
+                        var comboxBoxContainer = document.createElement("div");
+                        td2.appendChild(comboxBoxContainer);
+
+                        const comboBox = new ComboBox(
+                            {
+                                required: foundField && !foundField.nullable ? true : false,
+                                value: attributeValue,
+                                store: memoryStore,
+                                searchAttr: "name",
+                                featureAttribute: field.fieldName,
+                                disabled: foundField && !foundField.editable ? true : false,
+                            },
+                            comboxBoxContainer
+                        );
+
+                        comboBox.on("change", (value) => {
+                            feature.attributes[comboBox.featureAttribute] = value;
+                        });
+                    } else {
+                        var validationTextBoxContainer = document.createElement("div");
+                        td2.appendChild(validationTextBoxContainer);
+
+                        const validationTextBox = new ValidationTextBox(
+                            {
+                                required: foundField && !foundField.nullable ? true : false,
+                                trim: true,
+                                value: attributeValue,
+                                featureAttribute: field.fieldName,
+                                disabled: foundField && !foundField.editable ? true : false,
+                                style: "width: 100%;",
+                                maxLength: foundField && foundField.length ? foundField.length : null,
+                            },
+                            validationTextBoxContainer
+                        );
+
+                        validationTextBox.on("change", (event) => {
+                            feature.attributes[validationTextBox.featureAttribute] = event;
+                        });
+                    }
+
+                    tr.appendChild(td);
+                    tr.appendChild(td2);
+                    tabContentTable.appendChild(tr);
+                }
+            }
+
+            const line2 = document.createElement("div");
+            line2.setAttribute("class", "formLineClass");
+            this.popupContent.appendChild(line2);
+
+            this.editTabActionDiv = document.createElement("div");
+            this.editTabActionDiv.setAttribute("class", "actionsPane actionList");
+            this.editTabActionDiv.setAttribute("style", "padding-bottom: 8px;display: flex;justify-content: space-evenly;");
+
+            this.popupContent.appendChild(this.editTabActionDiv);
+
+            this.saveTable = domConstruct.toDom(
+                '<div><a title="Save table" to="" class="action saveTable" href="javascript:void(0);"><span>Sauver la table</span></a></div>'
+            );
+            this.saveTable.onclick = () => {
+                this.saveTableApplyEdit(feature, layer);
+
+                this.displayPopupContent(feature);
+            };
+
+            domConstruct.place(this.saveTable, this.editTabActionDiv);
+
+            this.cancelEdit = domConstruct.toDom(
+                '<div><a title="Cancel edit" to="" class="action cancelEdit" href="javascript:void(0);"><span>Annuler</span></a></div>'
+            );
+            this.cancelEdit.onclick = () => {
+                feature.attributes = orignalFeatureAttributes;
+
+                this.displayPopupContent(feature);
+            };
+
+            domConstruct.place(this.cancelEdit, this.editTabActionDiv);
+
+            //this.displayOnPopup(tabContent);
+            //this.searchForRelationships(feature, layer, parentTab);
         },
 
         searchForRelationships: function (feature, layer, parentTab) {
@@ -571,25 +721,6 @@ define([
                             .filter((item) => item);
 
                         if (relationsShips.length) {
-                            if (!this.firstTabVisible) {
-                                var popupTab = document.createElement("p");
-                                popupTab.innerHTML = response.name;
-                                popupTab.className = "selected";
-
-                                this.selectedTab = popupTab;
-                                this.tabHeader.appendChild(popupTab);
-                                this.firstTabVisible = true;
-                                this.own(
-                                    on(
-                                        popupTab,
-                                        "click",
-                                        lang.hitch(this, function () {
-                                            this.displayPopupContentTab(popupTab);
-                                        })
-                                    )
-                                );
-                            }
-
                             relationsShips.forEach((relationsShip) => {
                                 this.queryRelatedFeatures(feature, layer, relationsShip, parentTab);
                             });
@@ -629,7 +760,7 @@ define([
                     var myLayer = new FeatureLayer(layerFromMap.url);
 
                     if (layerFromMap.popupInfo) {
-                        this.createTab(featureSet, relationsShip, layerFromMap.popupInfo, myLayer, parentTab);
+                        this.createTab(featureSet, relationsShip, layerFromMap, myLayer, parentTab);
                     }
                 } else {
                     console.log("No related found");
@@ -637,8 +768,8 @@ define([
             });
         },
 
-        createTab: function (featureSet, relationsShip, popupTemplate, layer, parentTab) {
-            //console.log("createTab", featureSet, popupTemplate, layer);
+        createTab: function (featureSet, relationsShip, layerFromMap, layer, parentTab) {
+            //console.log("createTab", featureSet, layerFromMap.popupInfo, layer);
 
             const tabList = document.createElement("div");
             tabList.setAttribute("class", "contentForm");
@@ -648,7 +779,7 @@ define([
 
             const tabListTitle = document.createElement("p");
             tabListTitle.setAttribute("class", "formListTitle");
-            tabListTitle.innerHTML = relationsShip.name;
+            tabListTitle.innerHTML = layerFromMap.title;
 
             tabList.appendChild(tabListTitle);
 
@@ -662,7 +793,7 @@ define([
             tabList.appendChild(tabListTable);
 
             var tab = document.createElement("p");
-            tab.innerHTML = relationsShip.name;
+            tab.innerHTML = layerFromMap.title;
             this.tabHeader.appendChild(tab);
 
             if (parentTab) {
@@ -700,7 +831,7 @@ define([
             );
 
             for (var i = 0; i < featureSet.features.length; i++) {
-                featureSet.features[i].setInfoTemplate(popupTemplate);
+                featureSet.features[i].setInfoTemplate(layerFromMap.popupInfo);
 
                 var feature = featureSet.features[i];
 
@@ -754,24 +885,6 @@ define([
 
             return foundLayerOrTable;
         },
-
-        getField: function (fieldName, fields) {
-            for (var i = 0; i < fields.length; i++) {
-                if (fields[i].name == fieldName) return fields[i];
-            }
-
-            return null;
-        },
-
-        //replaceAll alternative
-        escapeRegExp: function (string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-        },
-
-        replaceAll: function (str, find, replace) {
-            return str.replace(new RegExp(this.escapeRegExp(find), "g"), replace);
-        },
-        //replaceAll alternative
 
         displayOnPopup: function (elementToShow) {
             domUtils.hide(this.currentDisplay);
@@ -835,7 +948,13 @@ define([
                     var attributeName = field.label;
                     var attributeValue = feature.attributes[field.fieldName];
 
-                    if (field.type == "esriFieldTypeDate") attributeValue = this.dateToString(attributeValue);
+                    var foundField = layer.fields.find((originalField) => {
+                        return originalField.name === field.fieldName;
+                    });
+
+                    if (foundField.type == "esriFieldTypeDate" && attributeValue) {
+                        attributeValue = this.dateToString(attributeValue);
+                    }
 
                     var tr = document.createElement("tr");
 
@@ -1037,18 +1156,6 @@ define([
             //this.searchForRelationships(feature, layer, parentTab);
         },
 
-        isValidHttpUrl: function (string) {
-            let url;
-
-            try {
-                url = new URL(string);
-            } catch (_) {
-                return false;
-            }
-
-            return url.protocol === "http:" || url.protocol === "https:";
-        },
-
         saveTableApplyEdit: function (feature, layer) {
             layer.on("edits-complete", (event) => {
                 console.log("EDIT COMPLETE", event);
@@ -1064,6 +1171,46 @@ define([
             /* .then(function(results) {
                     console.log("edits added: ", results);
                   }); */
+        },
+
+        //replaceAll alternative
+        escapeRegExp: function (string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+        },
+
+        replaceAll: function (str, find, replace) {
+            return str.replace(new RegExp(this.escapeRegExp(find), "g"), replace);
+        },
+        //replaceAll alternative
+
+        isValidHttpUrl: function (string) {
+            let url;
+
+            try {
+                url = new URL(string);
+            } catch (_) {
+                return false;
+            }
+
+            return url.protocol === "http:" || url.protocol === "https:";
+        },
+
+        dateToString: function (date) {
+            var result = "";
+
+            var d = new Date(parseInt(date)); // + (new Date().getTimezoneOffset() * 1000 * 60));
+            result =
+                ("00" + d.getDate()).slice(-2) +
+                "/" +
+                ("00" + (d.getMonth() + 1)).slice(-2) +
+                "/" +
+                d.getFullYear() +
+                " " +
+                ("00" + d.getHours()).slice(-2) +
+                ":" +
+                ("00" + d.getMinutes()).slice(-2);
+
+            return result;
         },
 
         selectPrevious: function () {
@@ -1084,81 +1231,6 @@ define([
             if (this.popup.selectedIndex + 1 === this.popup.features.length) {
                 domClass.add(this.next, "hidden");
             }
-        },
-
-        dateToString: function (date) {
-            var result = "";
-
-            /*var month = date.getMonth();
-		  switch(month)
-		  {
-			  case 0: result = "janvier"; break;
-			  case 1: result = "f�vrier"; break;
-			  case 2: result = "mars"; break;
-			  case 3: result = "avril"; break;
-			  case 4: result = "mai"; break;
-			  case 5: result = "juin"; break;
-			  case 6: result = "juillet"; break;
-			  case 7: result = "ao�t"; break;
-			  case 8: result = "septembre"; break;
-			  case 9: result = "octobre"; break;
-			  case 10: result = "novembre"; break;
-			  case 11: result = "d�cembre"; break;
-			  default: break;
-		  }
-		  
-		  var day = date.getDate();
-		  result += " " + day; 
-		  
-		  var year = date.getFullYear();
-		  result += ", " + year;*/
-
-            var d = new Date(parseInt(date)); // + (new Date().getTimezoneOffset() * 1000 * 60));
-            result =
-                ("00" + d.getDate()).slice(-2) +
-                "/" +
-                ("00" + (d.getMonth() + 1)).slice(-2) +
-                "/" +
-                d.getFullYear() +
-                " " +
-                ("00" + d.getHours()).slice(-2) +
-                ":" +
-                ("00" + d.getMinutes()).slice(-2);
-
-            return result;
-        },
-
-        getValueFromDomainCode: function (fieldName, code, fields) {
-            var field = null;
-
-            for (var i = 0; i < fields.length; i++) {
-                if (fields[i].name == fieldName) {
-                    field = fields[i];
-                    break;
-                }
-            }
-
-            if (!field) return code;
-
-            if (!field.domain || !field.domain.codedValues) return code;
-
-            var codedValues = field.domain.codedValues;
-
-            for (var j = 0; j < codedValues.length; j++) {
-                if (codedValues[j].code == code) return codedValues[j].name;
-            }
-
-            return code;
-        },
-
-        isAdmin: function () {
-            for (var i = 0; i < esri.id.credentials.length; i++) {
-                if (esri.id.credentials[i].scope == "server") {
-                    if (esri.id.credentials[i].isAdmin) return true;
-                    else return false;
-                }
-            }
-            return false;
         },
     });
 });
