@@ -1,0 +1,312 @@
+.popupheader {
+    text-align: center;
+    height: 30px;
+    border-bottom: solid 1px #ccc;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -o-user-select: none;
+}
+
+.esriViewPopup {
+    padding-bottom: 12px;
+}
+
+.clear {
+    float: right;
+    margin: 0 10px;
+}
+
+.titleButton.prev.light {
+    background-position: -30px -0px;
+    width: 9px;
+    height: 17px;
+}
+
+.titleButton.next.light {
+    background-position: -15px 0px;
+    width: 9px;
+    height: 17px;
+}
+
+.titleButton.prev {
+    background-position: -57px -20px;
+    width: 9px;
+    height: 17px;
+}
+
+.titleButton.next {
+    background-position: -41px 0px;
+    width: 9px;
+    height: 17px;
+}
+
+.titleButton {
+    float: right;
+    cursor: pointer;
+    background: transparent url("//js.arcgis.com/3.27/esri/dijit/images/popup.png") no-repeat scroll 0% 0%;
+    margin: 0 4px;
+}
+
+.esriPopup .actionsPane {
+    background-color: inherit;
+}
+
+.myPopupHidden {
+    display: none;
+}
+
+.popupheader {
+    text-align: center;
+    height: 25px;
+    border-bottom: solid 1px #ccc;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -o-user-select: none;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.clear {
+    float: right;
+    margin: 0 10px;
+}
+
+.titleButton.prev {
+    background-position: -57px -20px;
+    width: 9px;
+    height: 17px;
+}
+
+.titleButton.next {
+    background-position: -41px 0px;
+    width: 9px;
+    height: 17px;
+}
+
+.titleButton {
+    float: right;
+    cursor: pointer;
+    background: transparent url("https://js.arcgis.com/3.15/esri/dijit/images/popup.png") no-repeat scroll 0% 0%;
+    margin: 0 4px;
+}
+
+.esriPopup .actionsPane {
+    background-color: inherit;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.actionsPane {
+    background-color: inherit;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.attachmentsSection ul {
+    /*display:none;*/
+}
+
+#customAttachments {
+    display: none;
+    text-align: center;
+    /*margin-bottom:20px;*/
+}
+
+#formAttachments {
+    display: none;
+    margin-top: 5px;
+}
+
+.tabHeader {
+    text-align: center;
+    /*height: 40px;*/
+    width: 100%;
+    /*border-bottom: solid 1px #ccc;*/
+    margin-top: 7px;
+    border-bottom: solid 1px black;
+}
+
+.tabHeader p {
+    display: inline-block;
+    border: solid 1px black;
+    padding: 5px;
+    cursor: pointer;
+    width: 35%;
+    border-bottom: #fff;
+}
+
+.tabHeader .selected {
+    color: white;
+    background: #555;
+}
+
+.tabHeader p:hover {
+    color: white;
+    background: #555;
+    opacity: 0.5;
+}
+
+.contentForm {
+    display: none;
+    margin: 8px;
+    /*width:100%;*/
+}
+
+.formListTitle {
+    font-weight: bold;
+}
+
+.formTitleClass {
+    font-weight: bold;
+}
+
+.formLineClass {
+    border: none;
+    border-top: 1px solid #333333;
+    margin-top: 6px;
+    /* margin-bottom: 6px;*/
+}
+
+.tabListTable {
+    /*padding: 2px;
+    padding-bottom: 5px;*/
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tabListTable tr {
+    cursor: pointer;
+}
+
+.tabListTable tr:hover {
+    background-color: #fff9df;
+}
+
+.tabListTable td {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+
+.attrTable {
+    width: 100%;
+}
+/* .attrTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+} */
+
+.tabContentTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabContentTable tr:nth-child(2n) {
+    background-color: #f2f2f2;
+  }
+
+/* .tabContentTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+} */
+
+.tabContentTable td {
+    padding: 2px;
+    /* padding: 5px 2px 5px 2px; */
+}
+
+.tabContentTable td.attrName {
+    color: #888888;
+    padding-right: 5px;
+    width: 42%;
+}
+
+.buttonImage {
+    display: none;
+    cursor: pointer;
+    background: transparent url(https://js.arcgis.com/3.15/esri/dijit/images/popup.png) no-repeat scroll 0% 0%;
+    margin: 0 4px;
+}
+
+.buttonImage.next {
+    background-position: -41px 0px;
+    width: 9px;
+    height: 17px;
+    position: absolute;
+    right: 25px;
+    margin-top: 95px;
+}
+
+.buttonImage.prev {
+    background-position: -57px -20px;
+    width: 9px;
+    height: 17px;
+    position: absolute;
+    left: 25px;
+    margin-top: 95px;
+}
+
+.attachmentsSection {
+    display: none;
+}
+
+.esriViewPopup .break {
+    height: 0px;
+}
+
+#noFormMsg {
+    /*text-align:center;*/
+    padding: 8px;
+    display: none;
+    font-weight: bold;
+}
+
+.popup-menu-button {
+    display: none;
+}
+
+.esriViewPopup .header {
+    /*line-height: 1.5em;*/
+}
+
+.actionFormClass {
+    margin-top: 20px;
+}
+
+#backToList {
+    color: -webkit-link;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.widget-popuppanel .dijitContentPane {
+    padding-bottom: 3px;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.widget-popuppanel .esriPopup {
+    /*width: 399px !important;*/
+    position: relative;
+    background: white;
+    padding: 5px 0;
+    bottom: 5px;
+    color: #fff;
+}
+
+.widget-popuppanel .esriViewPopup .mainSection .attrTable td.attrName {
+    width: 42%;
+}
+
+/* .attachment {
+    margin-top: 5px;
+} */
+
+.attachment {
+    padding-left: 10px;
+}
